@@ -1,42 +1,72 @@
-SCHOLARSHIP MANAGEMENT SYSTEM
+# 🎓 Scholarship Management System
 
-A. Admin Features
-    Main Feature: Authentication
-    Actions:
-        • Register
-        • Login
-        • Logout
-    Main Feature: Applicant management
-    Sub-Feature: Applicant records
-    Actions:
-        • Display applicants
-        • Add applicant data
-        • Edit applicant data
-        • Delete applicant data
-    Main Feature: Scholarship management
-    Sub-Feature: Scholarship records
-    Actions:
-        • Display scholarships
-        • Add scholarship
-        • Edit scholarship
-        • Delete scholarship
-    Main Feature: Application Management
-    Sub-Feature: Application records
-    Actions:
-        • View application status
-        • Approve application
-        • Reject application
+A web-based Scholarship Management System built to manage scholarship applications efficiently for both administrators and users.
 
-B. User Features
-_
-    Main Feature: Authentication
-    Actions:
-        • Register
-        • Login
-        • Logout
-    Main Feature: Scholarship application
-    Actions:
-        • View available scholarships
-        • Apply for scholarship
-        • Edit application
-        • Delete application
+---
+
+## 📌 System Overview
+
+The system has two main roles:
+
+- **Admin**
+- **User (Applicant)**
+
+Each role has specific features and permissions.
+
+---
+
+# 👨‍💼 A. Admin Features
+
+## 🔐 Authentication
+- Register
+- Login
+- Logout
+
+## 👥 Applicant Management
+### 📂 Applicant Records
+- Display applicants
+- Add applicant data
+- Edit applicant data
+- Delete applicant data
+
+## 🎓 Scholarship Management
+### 📂 Scholarship Records
+- Display scholarships
+- Add scholarship
+- Edit scholarship
+- Delete scholarship
+
+## 📄 Application Management
+### 📂 Application Records
+- View application status
+- Approve application
+- Reject application
+
+---
+
+# 👩‍🎓 B. User Features
+
+## 🔐 Authentication
+- Register
+- Login
+- Logout
+
+## 📝 Scholarship Application
+- View available scholarships
+- Apply for scholarship
+- Edit application
+- Delete application
+
+---
+
+## 🛠️ Technologies Used
+- PHP
+- Laravel Framework
+- MySQL
+- HTML, CSS, JavaScript
+
+---
+
+## 🚀 Installation Guide
+
+1. Clone the repository
