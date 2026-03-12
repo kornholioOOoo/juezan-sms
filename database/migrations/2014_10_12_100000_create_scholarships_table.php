@@ -11,13 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-    $table->increments('user_id');
-    
-    $table->string('username', 50)->unique();
-    $table->string('email', 100)->unique();
-    $table->string('password', 100);
-    $table->string('role', 20);
+        Schema::create('scholarships', function (Blueprint $table) {
+    $table->increments('scholarship_id');
+
+    $table->string('scholarship_name', 100);
+    $table->string('provider', 100);
+    $table->text('description')->nullable();
+    $table->decimal('amount', 10, 2);
+    $table->integer('slots')->nullable();
+    $table->string('status', 20);
 
     $table->dateTime('created_at');
     $table->dateTime('updated_at')->nullable();
@@ -29,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('password_reset_tokens');
     }
 };
