@@ -9,8 +9,16 @@ class Scholarship extends Model
 {
     use HasFactory;
 
-    
-     protected $fillable = [
+    protected $table = 'scholarships';
+
+    // ✅ THIS FIXES YOUR ERROR
+    protected $primaryKey = 'scholarship_id';
+
+    public $incrementing = true;
+
+    protected $keyType = 'int';
+
+    protected $fillable = [
         'scholarship_name',
         'provider',
         'description',
@@ -18,4 +26,10 @@ class Scholarship extends Model
         'slots',
         'status'
     ];
+
+    // Optional (for route model binding)
+    public function getRouteKeyName()
+    {
+        return 'scholarship_id';
+    }
 }

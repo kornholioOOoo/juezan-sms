@@ -17,10 +17,21 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    protected $table = 'users';
+    protected $primaryKey = 'user_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
-        'name',
+        'username',
         'email',
         'password',
+        'role',
+        'first_name',
+        'middle_name',
+        'last_name',
+        'course',
+        'year_level'
     ];
 
     /**
@@ -33,6 +44,10 @@ class User extends Authenticatable
         'remember_token',
     ];
 
+    public function student()
+{
+    return $this->hasOne(Student::class, 'user_id', 'user_id');
+}
     /**
      * The attributes that should be cast.
      *

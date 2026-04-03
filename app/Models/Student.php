@@ -9,7 +9,14 @@ class Student extends Model
 {
     use HasFactory;
 
-    
+    protected $table = 'students';
+
+    protected $primaryKey = 'student_id';
+
+    public $incrementing = true;
+
+    protected $keyType = 'int';
+
     protected $fillable = [
         'user_id',
         'student_no',
@@ -19,8 +26,16 @@ class Student extends Model
         'course',
         'year_level',
         'contact_no',
-        'address',
-        'created_at',
-        'updated_at'
+        'address'
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'student_id';
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
 }

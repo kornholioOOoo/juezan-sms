@@ -9,12 +9,24 @@ class Application extends Model
 {
     use HasFactory;
 
-    
+    protected $table = 'applications';
+    protected $primaryKey = 'application_id';
+    public $incrementing = true;
+    protected $keyType = 'int';
+
     protected $fillable = [
-        'student_id',
-        'scholarship_id',
-        'date_applied',
-        'status',
-        'remarks'
-         ];
+        'scholarship_id'
+    ];
+
+
+    public function student()
+    {
+        return $this->belongsTo(Student::class, 'applicant_id', 'student_id');
+    }
+
+
+    public function scholarship()
+    {
+        return $this->belongsTo(Scholarship::class, 'scholarship_id', 'scholarship_id');
+    }
 }
