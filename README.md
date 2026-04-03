@@ -58,15 +58,3 @@ Each role has specific features and permissions.
 - Delete application
 
 ---
-
-## 🛠️ Technologies Used
-- PHP
-- Laravel Framework
-- MySQL
-- HTML, CSS, JavaScript
-
----
-
-## 🚀 Installation Guide
-
-1. Clone the repository
