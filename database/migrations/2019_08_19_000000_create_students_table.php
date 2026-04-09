@@ -13,7 +13,6 @@ return new class extends Migration
     $table->increments('student_id');
 
     $table->unsignedInteger('user_id');
-    $table->string('student_no', 20)->unique();
 
     $table->string('first_name', 50);
     $table->string('middle_name', 50);

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->unsignedInteger('applicant_id');   // FK to students
             $table->unsignedInteger('scholarship_id'); // FK to scholarships
 
-            $table->date('date_applied');
+            $table->date('date_applied')->default(DB::raw('CURRENT_DATE'));
             $table->string('status', 20)->default('pending');
             $table->string('remarks', 255)->nullable();
 

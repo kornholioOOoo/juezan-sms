@@ -15,6 +15,7 @@ class Application extends Model
     protected $keyType = 'int';
 
     protected $fillable = [
+        'applicant_id', 
         'scholarship_id'
     ];
 

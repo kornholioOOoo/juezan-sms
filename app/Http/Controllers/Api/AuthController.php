@@ -16,53 +16,58 @@ class AuthController extends Controller
      * Register a new user (Admin or Student)
      */
     public function register(Request $request)
-    {
-        $request->validate([
-            'username' => 'required|string|max:50|unique:users,username',
-            'email' => 'required|string|email|unique:users,email',
-            'password' => 'required|string|min:6|confirmed', // password_confirmation required
-            'role' => 'required|string|in:admin,student',
-            'first_name' => 'required_if:role,student|string|max:255',
-            'middle_name' => 'required_if:role,student|string|max:255',
-            'last_name' => 'required_if:role,student|string|max:255',
-        ]);
+{
+    $validated = $request->validate([
+        'username' => 'required|string|max:50|unique:users,username',
+        'email' => 'required|string|email|unique:users,email',
+        'password' => 'required|string|min:6|confirmed',
+        'role' => 'required|string|in:admin,student',
 
-        $now = Carbon::now();
+        'first_name' => 'required_if:role,student|string|max:50',
+        'middle_name' => 'required_if:role,student|string|max:50',
+        'last_name' => 'required_if:role,student|string|max:50',
+        'course' => 'required_if:role,student|string|max:50',
+        'year_level' => 'required_if:role,student|integer|min:1|max:5'
+    ]);
 
-        // Create user
-        $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
+    $now = now();
+
+    // ✅ Create user
+    $user = User::create([
+        'username' => $validated['username'],
+        'email' => $validated['email'],
+        'password' => Hash::make($validated['password']),
+        'role' => $validated['role'],
+        'created_at' => $now,
+        'updated_at' => $now
+    ]);
+
+    // ✅ Create student ONLY if role = student
+    if ($validated['role'] === 'student') {
+        Student::create([
+            'user_id' => $user->user_id,
+            'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'],
+            'last_name' => $validated['last_name'],
+            'course' => $validated['course'],
+            'year_level' => $validated['year_level'],
             'created_at' => $now,
             'updated_at' => $now
         ]);
-
-        // If the user is a student, create a record in students table
-        if ($request->role === 'student') {
-            Student::create([
-                'user_id' => $user->user_id,
-                'first_name' => $request->first_name,
-                'middle_name' => $request->middle_name,
-                'last_name' => $request->last_name,
-                'created_at' => $now,
-                'updated_at' => $now
-            ]);
-        }
-
-        $token = $user->createToken('auth_token')->plainTextToken;
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Registration successful',
-            'data' => [
-                'user' => $user,
-                'token' => $token,
-                'token_type' => 'Bearer'
-            ]
-        ], 201);
     }
+
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Registration successful',
+        'data' => [
+            'user' => $user,
+            'token' => $token,
+            'token_type' => 'Bearer'
+        ]
+    ], 201);
+}
 
     /**
      * Login user (Admin or Student)

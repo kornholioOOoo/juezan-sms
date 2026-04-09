@@ -10,30 +10,27 @@ class ApplicationController extends Controller
 {
     /**
      * Display a listing of applications
+     * - Admin: see all
+     * - Student: see own only
      */
     public function index(Request $request)
     {
         $user = $request->user();
 
-        // Admin: see all applications
         if ($user->role === 'admin') {
-            return response()->json([
-                'success' => true,
-                'data' => Application::all()
-            ]);
+            $applications = Application::with(['student', 'scholarship'])->get();
+        } else {
+            $student = $user->student;
+            if (!$student) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Student record not found'
+                ], 404);
+            }
+            $applications = Application::with('scholarship')
+                ->where('applicant_id', $student->student_id)
+                ->get();
         }
-
-        // Student: see only own applications
-        $student = $user->student;
-
-        if (!$student) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Student record not found'
-            ], 404);
-        }
-
-        $applications = Application::where('applicant_id', $student->student_id)->get();
 
         return response()->json([
             'success' => true,
@@ -42,7 +39,7 @@ class ApplicationController extends Controller
     }
 
     /**
-     * Store a newly created application
+     * Store a newly created application (student only)
      */
     public function store(Request $request)
     {
@@ -60,7 +57,7 @@ class ApplicationController extends Controller
             ], 404);
         }
 
-        // Prevent duplicate application
+        // Prevent duplicate applications
         $existing = Application::where('applicant_id', $student->student_id)
             ->where('scholarship_id', $request->scholarship_id)
             ->first();
@@ -73,8 +70,10 @@ class ApplicationController extends Controller
         }
 
         $application = Application::create([
-            'applicant_id' => $student->student_id, // ✅ automatic
-            'scholarship_id' => $request->scholarship_id
+            'applicant_id' => $student->student_id,
+            'scholarship_id' => $request->scholarship_id,
+            'status' => 'pending',
+            'date_applied' => now()
         ]);
 
         return response()->json([
@@ -89,13 +88,11 @@ class ApplicationController extends Controller
      */
     public function show(Request $request, string $id)
     {
-        $application = Application::findOrFail($id);
+        $application = Application::with(['student', 'scholarship'])->findOrFail($id);
         $user = $request->user();
 
-        // If not admin, restrict access
         if ($user->role !== 'admin') {
             $student = $user->student;
-
             if (!$student || $application->applicant_id != $student->student_id) {
                 return response()->json([
                     'success' => false,
@@ -111,17 +108,15 @@ class ApplicationController extends Controller
     }
 
     /**
-     * Update application
+     * Update application (student only, can change scholarship)
      */
     public function update(Request $request, string $id)
     {
         $application = Application::findOrFail($id);
         $user = $request->user();
 
-        // Only owner or admin can update
         if ($user->role !== 'admin') {
             $student = $user->student;
-
             if (!$student || $application->applicant_id != $student->student_id) {
                 return response()->json([
                     'success' => false,
@@ -146,17 +141,15 @@ class ApplicationController extends Controller
     }
 
     /**
-     * Delete application
+     * Delete application (student or admin)
      */
     public function destroy(Request $request, string $id)
     {
         $application = Application::findOrFail($id);
         $user = $request->user();
 
-        // Only owner or admin can delete
         if ($user->role !== 'admin') {
             $student = $user->student;
-
             if (!$student || $application->applicant_id != $student->student_id) {
                 return response()->json([
                     'success' => false,
@@ -170,6 +163,46 @@ class ApplicationController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Application deleted successfully'
+        ]);
+    }
+
+    /**
+     * Approve an application (admin only)
+     */
+    public function approve(string $id)
+    {
+        $application = Application::findOrFail($id);
+
+        $application->update([
+            'status' => 'approved',
+            'remarks' => 'Approved by admin'
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Application approved successfully',
+            'data' => $application
+        ]);
+    }
+
+    /**
+     * Reject an application (admin only)
+     */
+    public function reject(Request $request, string $id)
+    {
+        $application = Application::findOrFail($id);
+
+        $remarks = $request->input('remarks', 'Rejected by admin');
+
+        $application->update([
+            'status' => 'rejected',
+            'remarks' => $remarks
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Application rejected successfully',
+            'data' => $application
         ]);
     }
 }
