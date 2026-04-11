@@ -11,7 +11,6 @@ class Scholarship extends Model
 
     protected $table = 'scholarships';
 
-    // ✅ THIS FIXES YOUR ERROR
     protected $primaryKey = 'scholarship_id';
 
     public $incrementing = true;
@@ -27,7 +26,7 @@ class Scholarship extends Model
         'status'
     ];
 
-    // Optional (for route model binding)
+
     public function getRouteKeyName()
     {
         return 'scholarship_id';

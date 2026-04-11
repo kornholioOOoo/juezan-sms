@@ -8,17 +8,12 @@ use App\Models\Scholarship;
 
 class ScholarshipController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
         return Scholarship::all();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
         $scholarship = Scholarship::create($request->all());
@@ -34,9 +29,7 @@ class ScholarshipController extends Controller
         ], 201);
     }
 
-    /**
-     * Display the specified resource.
-     */
+
     public function show(string $id)
     {
         $scholarship = Scholarship::findOrFail($id);
@@ -44,9 +37,7 @@ class ScholarshipController extends Controller
         return response()->json($scholarship);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+
     public function update(Request $request, string $id)
     {
         $scholarship = Scholarship::findOrFail($id);
@@ -59,9 +50,7 @@ class ScholarshipController extends Controller
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+
     public function destroy(string $id)
     {
         $scholarship = Scholarship::findOrFail($id);

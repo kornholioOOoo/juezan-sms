@@ -12,9 +12,7 @@ use Carbon\Carbon;
 
 class AuthController extends Controller
 {
-    /**
-     * Register a new user (Admin or Student)
-     */
+
     public function register(Request $request)
 {
     $validated = $request->validate([
@@ -32,7 +30,7 @@ class AuthController extends Controller
 
     $now = now();
 
-    // ✅ Create user
+
     $user = User::create([
         'username' => $validated['username'],
         'email' => $validated['email'],
@@ -42,7 +40,7 @@ class AuthController extends Controller
         'updated_at' => $now
     ]);
 
-    // ✅ Create student ONLY if role = student
+
     if ($validated['role'] === 'student') {
         Student::create([
             'user_id' => $user->user_id,
@@ -69,9 +67,7 @@ class AuthController extends Controller
     ], 201);
 }
 
-    /**
-     * Login user (Admin or Student)
-     */
+
     public function login(Request $request)
     {
         $request->validate([
@@ -101,12 +97,10 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Logout user
-     */
+
     public function logout(Request $request)
     {
-        // Delete the current token
+
         $request->user()->currentAccessToken()->delete();
 
         return response()->json([
@@ -115,16 +109,14 @@ class AuthController extends Controller
         ]);
     }
 
-    /**
-     * Return authenticated user info
-     */
+
     public function me(Request $request)
     {
         $user = $request->user();
 
-        // If the user is a student, include student info
+
         if ($user->role === 'student') {
-            $student = $user->student; // uses relation: User hasOne Student
+            $student = $user->student; 
             return response()->json([
                 'success' => true,
                 'data' => [

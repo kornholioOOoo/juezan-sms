@@ -8,11 +8,7 @@ use App\Models\Application;
 
 class ApplicationController extends Controller
 {
-    /**
-     * Display a listing of applications
-     * - Admin: see all
-     * - Student: see own only
-     */
+
     public function index(Request $request)
     {
         $user = $request->user();
@@ -38,9 +34,6 @@ class ApplicationController extends Controller
         ]);
     }
 
-    /**
-     * Store a newly created application (student only)
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -57,7 +50,7 @@ class ApplicationController extends Controller
             ], 404);
         }
 
-        // Prevent duplicate applications
+
         $existing = Application::where('applicant_id', $student->student_id)
             ->where('scholarship_id', $request->scholarship_id)
             ->first();
@@ -83,9 +76,7 @@ class ApplicationController extends Controller
         ], 201);
     }
 
-    /**
-     * Display a specific application
-     */
+
     public function show(Request $request, string $id)
     {
         $application = Application::with(['student', 'scholarship'])->findOrFail($id);
@@ -107,9 +98,7 @@ class ApplicationController extends Controller
         ]);
     }
 
-    /**
-     * Update application (student only, can change scholarship)
-     */
+
     public function update(Request $request, string $id)
     {
         $application = Application::findOrFail($id);
@@ -140,9 +129,6 @@ class ApplicationController extends Controller
         ]);
     }
 
-    /**
-     * Delete application (student or admin)
-     */
     public function destroy(Request $request, string $id)
     {
         $application = Application::findOrFail($id);
@@ -166,9 +152,7 @@ class ApplicationController extends Controller
         ]);
     }
 
-    /**
-     * Approve an application (admin only)
-     */
+
     public function approve(string $id)
     {
         $application = Application::findOrFail($id);
@@ -185,9 +169,7 @@ class ApplicationController extends Controller
         ]);
     }
 
-    /**
-     * Reject an application (admin only)
-     */
+
     public function reject(Request $request, string $id)
     {
         $application = Application::findOrFail($id);
